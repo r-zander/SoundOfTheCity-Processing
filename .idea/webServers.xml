@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="0a2d690c-952d-4b69-be77-a202152346d2" name="xielong.16mb.com" url="http://rza.io">
+        <fileTransfer host="xielong.16mb.com" port="21" rootFolder="/public_html/" password="dfd4df9fdf9fdfd4dfd8dfdfdfc6dfcfdfd4dfecdfebdfe3dfe6dfd4dfc7dfcbdfd8dfc1dfd4dff9dfebdffcdfefdfd4df9cdf9adfd4" username="u358706228">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

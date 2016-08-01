@@ -64,6 +64,10 @@ Grid.prototype.draw = function () {
     this.blocks.forEach(function (block) {
         block.draw();
     });
+
+    this.blocks.forEach(function (block) {
+        block.onAfterDraw();
+    });
 };
 
 Grid.prototype.drawGrid = function () {

@@ -1,4 +1,6 @@
 "use strict";
+var streetColors = new RandomListSet(Config.colors.berlin);
+
 function Block() {
 
     this.cells = [];
@@ -24,6 +26,8 @@ function Block() {
     this.strokeColorAnimation = null;
 
     this.fillColorAnimation = null;
+
+    this.streetColor = streetColors.pickOne();
 }
 
 Block.prototype.add = function (cell) {
@@ -329,6 +333,15 @@ Block.prototype.draw = function () {
     }
     if (this.fillColorAnimation != null) {
         this.fillColorAnimation.step();
+    }
+};
+
+Block.prototype.onAfterDraw = function () {
+    if (this.forwardStreet != null) {
+        this.forwardStreet.drawStations();
+    }
+    if (this.backwardStreet != null) {
+        this.backwardStreet.drawStations();
     }
 };
 

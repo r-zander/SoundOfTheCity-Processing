@@ -1,3 +1,4 @@
+"use strict";
 // var OscReceiver = {
 //
 //     /* incoming osc message are forwarded to the oscEvent method. */
@@ -27,13 +28,40 @@ var Sounds = {
 
         BASE_PATH: "/generativeCity/",
 
+        lastTicks: [],
+
         setup: function () {
 
             this.onRestart();
 
-            // CLOCK_FREQUENCY: round((Config.beatsPerMinute / 60) * (Config.ticksPerBar /
+            this.CLOCK_FREQUENCY = (Config.beatsPerMinute / 60) * (Config.ticksPerBar / 4);
 
             this.INSTRUMENT_GRID = new CenteredInstrumentGrid();
+
+            this.clock = new WAAClock(new AudioContext());
+            this.clock.start();
+
+            // this.part = new p5.Part(0, 1 / Config.ticksPerBar);
+            // this.part.setBPM(Config.beatsPerMinute);
+            // this.part.loop();
+            //
+            // var t0 = performance.now();
+            // this.part.addPhrase('debug', function () {
+            //     var t1 = performance.now();
+            //     Sounds.lastTicks.push(t1 - t0);
+            //     if (Sounds.lastTicks.length >= (10)){
+            //         Sounds.lastTicks.shift();
+            //     }
+            //     t0 = t1;
+            // }, [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        },
+
+        averageTickDuration: function () {
+            var sum = 0;
+            this.lastTicks.forEach(function (tickDuration) {
+                sum += tickDuration;
+            });
+            return sum / this.lastTicks.length;
         },
 
         // sendOscMessage: function (message) {
@@ -79,8 +107,7 @@ var Sounds = {
         },
 
         onStreetCreation: function (street) {
-            var part = this.getPart(street.pattern.tickDivider);
-
+            // var part = this.getPart(street.pattern.tickDivider);
 
             var sequence;
             if (street.forward) {
@@ -91,47 +118,80 @@ var Sounds = {
                 sequence = street.pattern.backwardSequence;
             }
 
-            street.phrase = new p5.Phrase(street.id, function (time, velocity) {
-                street.sound.play(time, 1, Sounds.getVolume(velocity));
+            street.step = 0;
 
-                street.onNote();
-            }, sequence);
+            var t0 = performance.now();
 
-            part.addPhrase(street.phrase);
+            street.clockEvent = this.clock.callbackAtTime(function () {
+                var velocity = sequence[street.step];
+
+                street.step++;
+                if (street.step >= sequence.length) {
+                    street.step = 0;
+                }
+                if (velocity > 0) {
+                    // TODO get TIME and VELOCITY
+                    var time = 0;
+                    // var velocity = 2;
+                    // street.sound.play(time, 1, Sounds.getVolume(velocity));
+                    street.sound.play(time, 1, Sounds.getVolume(velocity));
+
+                    street.onNote();
+
+                    var t1 = performance.now();
+                    console.log("Fourths: " + (t1 - t0 ));
+                    t0 = t1;
+                }
+            }, this.getInterval(Config.globalTickDivider)).repeat(this.getInterval(street.pattern.tickDivider));
+
+            // street.phrase = new p5.Phrase(street.id, function (time, velocity) {
+            //     street.sound.play(time, 1, Sounds.getVolume(velocity));
+            //
+            //     street.onNote();
+            // }, sequence);
+            //
+            // part.addPhrase(street.phrase);
+        },
+
+        getInterval: function (tickDivider) {
+            // FIXME
+            // return (1 / this.CLOCK_FREQUENCY) * (Config.ticksPerBar / tickDivider * 4);
+            return 1 / this.CLOCK_FREQUENCY * tickDivider;
         },
 
         getVolume: function (velocity) {
             return 1 / 3 * velocity;
         },
 
-        /**
-         * Map<TickDivider, Part>
-         */
-        parts: {}
-        ,
+        // /**
+        //  * Map<TickDivider, Part>
+        //  */
+        // parts: {},
+        //
+        // getPart: function (tickDivider) {
+        //     var key = tickDivider.toString();
+        //     if (this.parts.hasOwnProperty(key)) {
+        //         return this.parts[key];
+        //     }
+        //
+        //     var tatums = tickDivider / Config.ticksPerBar;
+        //     var part = new p5.Part(0, tatums);
+        //     part.setBPM(Config.beatsPerMinute);
+        //     this.parts[key] = part;
+        //     part.loop();
+        //
+        //     return part;
+        // },
 
-        getPart: function (tickDivider) {
-            var key = tickDivider.toString();
-            if (this.parts.hasOwnProperty(key)) {
-                return this.parts[key];
-            }
-
-            var tatums = tickDivider / Config.ticksPerBar;
-            var part = new p5.Part(0, tatums);
-            part.setBPM(Config.beatsPerMinute);
-            this.parts[key] = part;
-            part.loop();
-
-            return part;
-        }
-        ,
+        getPart: function () {
+            return this.part;
+        },
 
         onBlockStartCollision: function (instrument, patternVelocity, soundIndex) {
             // var message = new OscMessage(BASE_PATH + "onCollision/blockStart");
             // addCollisionInfo(message, instrument, patternVelocity, soundIndex);
             // sendOscMessage(message);
-        }
-        ,
+        },
 
         onBlockEndCollision: function (instrument, patternVelocity, soundIndex) {
             // var message = new OscMessage(BASE_PATH + "onCollision/blockEnd");

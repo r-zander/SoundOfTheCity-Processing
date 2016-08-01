@@ -20,10 +20,10 @@ var ConstructionMode = {
             var easystar = new EasyStar.js();
 
             easystar.setGrid(pathFinderGraph);
-
             easystar.setAcceptableTiles([1]);
 
             easystar.enableSync();
+            easystar.enableDiagonals();
 
             return easystar;
         }

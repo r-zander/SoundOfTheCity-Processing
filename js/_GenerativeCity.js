@@ -109,8 +109,8 @@ function draw() {
         }
     } else {
         drawFPS();
-        drawTicks();
         drawBlockInfo();
+        drawTicks();
     }
 }
 
@@ -168,7 +168,7 @@ function drawBlockInfo() {
 
         fill(Colors.BACKGROUND);
         noStroke();
-        rect(x, y, 250, 9 * lineHeight);
+        rect(x, y, 250, 11.5 * lineHeight);
 
         textSize(relativeY(12));
         textAlign(LEFT, TOP);
@@ -181,8 +181,6 @@ function drawBlockInfo() {
         y += lineHeight;
         text("Instrument: " + block.getInstrument().toString, x, y);
         y += lineHeight;
-        // text("Sound: " + block.getSoundIndex(), x, y);
-        // y += lineHeight;
         text(
             "Intensity: " + block.getIntensity() + " / "
             + Patterns.getNumberOfIntensities(block.getInstrument()),
@@ -191,10 +189,23 @@ function drawBlockInfo() {
         y += lineHeight;
         text("Tick Divider: " + block.getPattern().tickDivider, x, y);
         y += lineHeight;
-        text("Main Pattern: " + block.getPattern().mainPattern(), x, y);
-        y += lineHeight;
-        text("Compl. Pattern: " + block.getPattern().complementaryPattern(), x, y);
 
+        if (block.forwardStreet !== null) {
+            text("Forward Street: " + block.forwardStreet.id, x, y);
+            y += lineHeight;
+            text("    Sound: " + block.sounds.forwardSound.file, x, y);
+            y += lineHeight;
+            text("    Pattern: " + block.getPattern().mainPattern, x, y);
+            y += lineHeight;
+        }
+
+        if (block.backwardStreet !== null) {
+            text("Backward Street: " + block.backwardStreet.id, x, y);
+            y += lineHeight;
+            text("    Sound: " + block.sounds.backwardSound.file, x, y);
+            y += lineHeight;
+            text("    Pattern: " + block.getPattern().complementaryPattern, x, y);
+        }
     }
 }
 
@@ -319,6 +330,11 @@ function keyPressed() {
             restart();
             break;
         default:
+            switch (keyCode){
+                case KEY.ESC:
+                    restart();
+                    break;
+            }
             break;
     }
 }
@@ -354,27 +370,31 @@ function drawFPS() {
 }
 
 function drawTicks() {
-    strokeWeight(Grid.WEIGHT);
-    stroke(Car.COLOR);
-    fill(Colors.BACKGROUND);
+    // strokeWeight(Grid.WEIGHT);
+    // stroke(Car.COLOR);
+    // fill(Colors.BACKGROUND);
     var x = GridCell.DIAMETER * 4.5;
-    var y = GridCell.DIAMETER * 1.5;
-    rect(x, y, 8 * GridCell.DIAMETER, GridCell.DIAMETER);
+    // var y = GridCell.DIAMETER * 1.5;
+    // rect(x, y, 8 * GridCell.DIAMETER, GridCell.DIAMETER);
+    //
+    // var quarter = floor(currentTick / Config.ticksPerBar * 4);
+    //
+    // fill(Car.COLOR);
+    // rect(
+    //     x + (quarter * 2 * GridCell.DIAMETER),
+    //     y,
+    //     2 * GridCell.DIAMETER,
+    //     GridCell.DIAMETER);
 
-    var quarter = floor(currentTick / Config.ticksPerBar * 4);
+    // noStroke();
+    // fill(Car.COLOR);
+    // textSize(relativeY(12));
+    // textAlign(RIGHT, BOTTOM);
+    // // text(currentTick + " / " + Config.ticksPerBar, x + (3 + 8)
+    // //     * GridCell.DIAMETER, GridCell.DIAMETER * 2.5);
+    // text(Sounds.averageTickDuration().toFixed(2), x + (3 + 8)
+    //     * GridCell.DIAMETER, GridCell.DIAMETER * 2.5);
 
-    fill(Car.COLOR);
-    rect(
-        x + (quarter * 2 * GridCell.DIAMETER),
-        y,
-        2 * GridCell.DIAMETER,
-        GridCell.DIAMETER);
-
-    fill(Car.COLOR);
-    textSize(relativeY(12));
-    textAlign(RIGHT, BOTTOM);
-    text(currentTick + " / " + Config.ticksPerBar, x + (3 + 8)
-        * GridCell.DIAMETER, GridCell.DIAMETER * 2.5);
     textAlign(LEFT, BOTTOM);
     text(
         "Bar " + currentBar,

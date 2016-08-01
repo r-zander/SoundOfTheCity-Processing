@@ -36,11 +36,6 @@ function Street(parameters) {
 
     this.radius = GridCell.DIAMETER;
 
-    this.nodes.forEach(function (cell) {
-        this.addPoint(cell.xf() + this.radius, cell.yf() + this.radius);
-    }, this);
-
-
     var spawnCell;
 
     if (this.forward) {
@@ -52,8 +47,6 @@ function Street(parameters) {
 
     Sounds.onStreetCreation(this);
 }
-
-Street.prototype = new ShiffmanPath();
 
 Street.prototype.nodesToCells = function (nodes) {
     var cells = [];
@@ -98,6 +91,21 @@ Street.prototype.findNodes = function (allNodes) {
     return this.nodesToCells(nodes);
 };
 
+Street.prototype.getPoint = function (index) {
+    /*
+     * FIXME: why does it even occur? No good solution but at least the program doesn't crash.
+     */
+    if ((index < 0) || (index >= this.nodes.length)) {
+        return null;
+    }
+    var node = this.nodes[index];
+    return createVector(node.xf(), node.yf());
+};
+
+Street.prototype.length = function () {
+    return this.nodes.length;
+};
+
 // Street.prototype.tickCarSpawn = function () {
 //     var pattern;
 //
@@ -135,31 +143,45 @@ Street.prototype.spawnCar = function (location, forward) {
 };
 
 Street.prototype.draw = function () {
+    if (debug && this.nodes.length > 0) {
+        strokeWeight(Grid.WEIGHT * 6);
+        stroke(this.block.streetColor);
+
+        var previousNode = this.nodes[0];
+        this.nodes.slice(1, this.nodes.length).forEach(function (node) {
+            line(previousNode.xf() + GridCell.RADIUS, previousNode.yf() + GridCell.RADIUS, node.xf() + GridCell.RADIUS, node.yf() + GridCell.RADIUS);
+            previousNode = node;
+        });
+
+        // noStroke();
+        // if (this.forward) {
+        //     fill(255, 0, 0);
+        // } else {
+        //     fill(0, 196, 0);
+        // }
+        // this.cells.forEach(function (cell) {
+        //     if (this.forward) {
+        //         triangle(
+        //             cell.xf() + GridCell.DIAMETER, cell.yf(),
+        //             cell.xf() + GridCell.DIAMETER, cell.yf() + GridCell.DIAMETER,
+        //             cell.xf(), cell.yf() + GridCell.DIAMETER
+        //         );
+        //     } else {
+        //         triangle(
+        //             cell.xf() + GridCell.DIAMETER, cell.yf(),
+        //             cell.xf(), cell.yf(),
+        //             cell.xf(), cell.yf() + GridCell.DIAMETER
+        //         );
+        //     }
+        // }, this);
+    }
+};
+
+Street.prototype.drawStations = function () {
     if (debug) {
         Object.keys(this.debugPath.debugCells).forEach(function (key) {
             this.debugPath.debugCells[key].draw();
         }, this);
-
-        if (this.nodes.length == 0) {
-            return;
-        }
-
-        colorMode(HSB);
-        strokeWeight(3);
-
-        var hue = 0;
-
-        var previousNode = this.nodes[0];
-
-        this.nodes.slice(1, this.nodes.length).forEach(function (node) {
-            stroke(hue, 255, 255);
-            line(previousNode.xf(), previousNode.yf(), node.xf(), node.yf());
-            previousNode = node;
-            hue += 3;
-            hue %= 256;
-        });
-
-        colorMode(RGB);
     }
 };
 
@@ -196,8 +218,8 @@ DebugCell.prototype.draw = function () {
     fill(255);
     text(this.title.toString(), this.cell.xf(), this.cell.yf());
 
-    rectMode(CORNER);
+    ellipseMode(CORNER);
     stroke(128);
     strokeWeight(Grid.WEIGHT);
-    rect(this.cell.xf(), this.cell.yf(), GridCell.DIAMETER, GridCell.DIAMETER);
+    ellipse(this.cell.xf(), this.cell.yf(), GridCell.DIAMETER, GridCell.DIAMETER);
 };

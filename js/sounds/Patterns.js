@@ -69,9 +69,36 @@ Patterns.getRandomPattern = function (instrument, intensity) {
 function Pattern(line) {
     var values = line.split(" ");
     this.tickDivider = parseInt(values[0]);
-    this.forwardSequence = this.readSequence(values[1]);
-    this.backwardSequence = this.readSequence(values[2]);
+
+    this.mainPattern = values[1];
+    this.forwardSequence = this.applyTickDivider(this.readSequence(this.mainPattern));
+
+    this.complementaryPattern = values[2];
+    this.backwardSequence = this.applyTickDivider(this.readSequence(this.complementaryPattern));
 }
+
+Pattern.prototype.applyTickDivider = function (sequence) {
+    // if (this.tickDivider == Config.ticksPerBar) {
+        return sequence;
+    // }
+    // var newSequence = [];
+    // /*
+    //  * tickDivider = 24
+    //  * ticksPerBar = 96
+    //  * --> 1/4 tatums
+    //  * -->
+    //  * --> 4 ticks required
+    //  * add 3 ticks
+    //  */
+    // var additionalTicks = this.tickDivider - 1;
+    // sequence.forEach(function (velocity) {
+    //     newSequence.push(velocity);
+    //     for (var i = 0; i < additionalTicks; i++){
+    //         newSequence.push(0);
+    //     }
+    // });
+    // return newSequence;
+};
 
 Pattern.prototype.readSequence = function (string) {
     string = string.replace(Patterns.GROUP_SEPERATOR, "");
@@ -83,54 +110,54 @@ Pattern.prototype.readSequence = function (string) {
     return sequence;
 };
 
-Pattern.prototype.getVelocity = function (steps, forward) {
-    var sequence;
-    if (forward) {
-        sequence = this.forwardSequence;
-    } else {
-        sequence = this.backwardSequence;
-    }
-
-    var index = steps % sequence.length;
-    return sequence.get(index);
-};
-
-Pattern.prototype.mainPattern = function () {
-    return this.sequenceToString(this.forwardSequence);
-};
-
-Pattern.prototype.complementaryPattern = function () {
-    return this.sequenceToString(this.backwardSequence);
-};
-
-Pattern.prototype.sequenceToString = function (sequence) {
-    if (sequence.length % 4 == 0) {
-        return this.sequenceToString(sequence, 4);
-    } else {
-        return this.sequenceToString(sequence, 2);
-    }
-};
-
-Pattern.prototype.sequenceToString = function (sequence, groupLength) {
-    var out = "";
-    var currentGroupLength = 0;
-    sequence.forEach(function (integer) {
-        if (currentGroupLength == groupLength) {
-            out += Patterns.GROUP_SEPERATOR;
-            currentGroupLength = 0;
-        }
-        out += integer;
-        currentGroupLength++;
-    });
-    return out;
-};
+// Pattern.prototype.getVelocity = function (steps, forward) {
+//     var sequence;
+//     if (forward) {
+//         sequence = this.forwardSequence;
+//     } else {
+//         sequence = this.backwardSequence;
+//     }
+//
+//     var index = steps % sequence.length;
+//     return sequence.get(index);
+// };
+//
+// Pattern.prototype.mainPattern = function () {
+//     return this.sequenceToString(this.forwardSequence);
+// };
+//
+// Pattern.prototype.complementaryPattern = function () {
+//     return this.sequenceToString(this.backwardSequence);
+// };
+//
+// Pattern.prototype.sequenceToString = function (sequence) {
+//     if (sequence.length % 4 == 0) {
+//         return this.sequenceToString(sequence, 4);
+//     } else {
+//         return this.sequenceToString(sequence, 2);
+//     }
+// };
+//
+// Pattern.prototype.sequenceToString = function (sequence, groupLength) {
+//     var out = "";
+//     var currentGroupLength = 0;
+//     sequence.forEach(function (integer) {
+//         if (currentGroupLength == groupLength) {
+//             out += Patterns.GROUP_SEPERATOR;
+//             currentGroupLength = 0;
+//         }
+//         out += integer;
+//         currentGroupLength++;
+//     });
+//     return out;
+// };
 
 Pattern.prototype.toString = function () {
     var out = this.tickDivider;
     out += ' ';
-    out += this.mainPattern();
+    out += this.mainPattern;
     out += ' ';
-    out += this.complementaryPattern();
+    out += this.complementaryPattern;
     return out;
 };
 

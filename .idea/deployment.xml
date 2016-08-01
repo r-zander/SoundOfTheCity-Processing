@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData">
+    <serverData>
+      <paths name="xielong.16mb.com">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/projects/sound-of-the-city" local="$PROJECT_DIR$" web="/projects/sound-of-the-city" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
