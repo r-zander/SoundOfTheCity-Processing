@@ -76,6 +76,15 @@ Instrument.setup = function () {
     Instrument.values.forEach(function (instrument) {
         instrument.color = color(instrument.color);
 
+        colorMode(HSB);
+
+        instrument.backgroundColor = color(
+            hue (instrument.color),
+            saturation(instrument.color) / 2,
+            brightness(instrument.color) / 2);
+
+        colorMode(RGB);
+
         var soundArraySize = Config.numberOfSounds[instrument.configKey] - 1;
 
         instrument.sounds = new Array(soundArraySize);

@@ -105,10 +105,12 @@ CenteredInstrumentGrid.prototype.getInstrument = function (cell) {
 };
 
 CenteredInstrumentGrid.prototype.draw = function () {
-    noFill();
+    // noFill();
     strokeWeight(Grid.WEIGHT);
+    noStroke(Colors.BACKGROUND);
     grid.forEachCell(function (cell) {
-        stroke(cell.instrument.color);
+        // stroke(cell.instrument.color);
+        fill(cell.instrument.backgroundColor);
         rect(cell.xf(), cell.yf(), GridCell.DIAMETER, GridCell.DIAMETER);
     });
 

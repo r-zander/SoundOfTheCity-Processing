@@ -14,6 +14,23 @@
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="SvnBranchConfigurationManager">
+    <option name="myConfigurationMap">
+      <map>
+        <entry key="$PROJECT_DIR$">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://dsa-world.svn.cloudforge.com/soundofthecity/branches" />
+                  <option value="https://dsa-world.svn.cloudforge.com/soundofthecity/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://dsa-world.svn.cloudforge.com/soundofthecity/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+      </map>
+    </option>
     <option name="mySupportsUserInfoFilter" value="true" />
   </component>
 </project>

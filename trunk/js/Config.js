@@ -45,14 +45,14 @@ var Config = {
     globalTickDivider: 48,
 
     numberOfSounds: {
-        kick: 2,
-        bass: 2,
-        synth1: 2,
-        synth2: 2,
-        snare: 2,
-        hat1: 2,
-        hat2: 2,
-        percussion: 2
+        kick: 5,
+        bass: 9,
+        synth1: 8,
+        synth2: 11,
+        snare: 6,
+        hat1: 8,
+        hat2: 5,
+        percussion: 8
     },
 
     scaleResolution: true,
@@ -63,5 +63,27 @@ var Config = {
 
     afterBreakChangeChance: 0.125,
 
-    afterBreakDeleteChance: 0.125
+    afterBreakDeleteChance: 0.125,
+
+    colors: {
+        berlin: [
+            '#DC6BA6', // S1
+            '#007B3C', // S2, S25,
+            '#0065AD', // S3
+            '#AE5836', // S41
+            '#CB6219', // S42
+            '#CD9C53', // S45, S46, S47
+            '#ED7102', // S5
+            '#836CAA', // S7, S75, U6
+            '#61AC2C', // S8, S85, U1
+            '#9A2A47', // S9
+            '#E84D0E', // U2
+            '#00A091', // U3
+            '#FFD400', // U4
+            '#815137', // U5, U55
+            '#009AD9', // U7
+            '#005999', // U8
+            '#F18700'  // U9
+        ]
+    }
 };
