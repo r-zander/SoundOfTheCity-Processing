@@ -15,6 +15,8 @@ var debug = false;
 
 var deletionActivated = true;
 
+var buildMode = true;
+
 var currentTick = 0;
 
 var currentBar = 1;
@@ -143,7 +145,10 @@ function drawButtons() {
     noStroke();
     fill(Grid.COLOR);
     resetButton.draw();
-    if (mouseIsPressed && mouseButton == LEFT && resetButton.contains(mouseX, mouseY)) {
+    if (
+        (touchIsDown && buildMode && resetButton.contains(touchX, touchY)) ||
+        (mouseIsPressed && mouseButton == LEFT && resetButton.contains(mouseX, mouseY))
+    ) {
         fill(255);
     } else {
         fill(Car.COLOR);
@@ -210,8 +215,8 @@ function drawBlockInfo() {
 }
 
 function checkInteraction() {
-    if (mouseIsPressed) {
-        if (resetButton.contains(mouseX, mouseY)) {
+    if (mouseIsPressed || touchIsDown) {
+        if (resetButton.contains(mouseX, mouseY) || resetButton.contains(touchX, touchY)) {
             if (mouseButton == LEFT) {
                 restart();
             }
@@ -232,6 +237,11 @@ function checkInteraction() {
                 changeGrid(CellState.EMPTY);
                 break;
             default:
+                if (buildMode) {
+                    changeGrid(CellState.BUILT);
+                } else {
+                    changeGrid(CellState.EMPTY);
+                }
                 break;
         }
     }
@@ -330,7 +340,7 @@ function keyPressed() {
             restart();
             break;
         default:
-            switch (keyCode){
+            switch (keyCode) {
                 case KEY.ESC:
                     restart();
                     break;
@@ -470,8 +480,16 @@ function Interaction() {
 }
 
 Interaction.prototype.update = function () {
-    var newGridX = grid.getGridX(mouseX);
-    var newGridY = grid.getGridY(mouseY);
+    var interactionX = mouseX;
+    var interactionY = mouseY;
+
+    if (touchIsDown){
+        interactionX = touchX;
+        interactionY = touchY;
+    }
+
+    var newGridX = grid.getGridX(interactionX);
+    var newGridY = grid.getGridY(interactionY);
 
     if (this.currentMouseButton != mouseButton) {
         this.gridX = newGridX;
@@ -511,6 +529,14 @@ p5.Vector.prototype.multSelf = function (s) {
     this.z *= s;
     return this;
 };
+
+function shape(shape, x, y) {
+    push();
+    translate(x, y);
+    shape.beforeDraw();
+    shape.draw();
+    pop();
+}
 
 function lazyColor(colorString) {
     if (typeof colorString === "string") {

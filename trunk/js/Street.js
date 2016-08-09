@@ -195,6 +195,8 @@ Street.prototype.destroy = function () {
     this.cells.forEach(function (cell) {
         cell.state = CellState.EMPTY;
     });
+
+    Sounds.onStreetRemoval(this);
 };
 
 var DebugTitle = {

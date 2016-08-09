@@ -138,9 +138,9 @@ var Sounds = {
 
                     street.onNote();
 
-                    var t1 = performance.now();
-                    console.log("Fourths: " + (t1 - t0 ));
-                    t0 = t1;
+                    // var t1 = performance.now();
+                    // console.log("Fourths: " + (t1 - t0 ));
+                    // t0 = t1;
                 }
             }, this.getInterval(Config.globalTickDivider)).repeat(this.getInterval(street.pattern.tickDivider));
 
@@ -151,6 +151,10 @@ var Sounds = {
             // }, sequence);
             //
             // part.addPhrase(street.phrase);
+        },
+
+        onStreetRemoval: function (street) {
+            street.clockEvent.clear();
         },
 
         getInterval: function (tickDivider) {

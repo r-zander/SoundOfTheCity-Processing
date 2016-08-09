@@ -39,14 +39,11 @@ function BuildingShapeFactory() {
      */
     buildingShape = new BuildingShape();
     buildingShape.createShape = function (width, height) {
-        var shape = new Shape();
+        var shape = new Shape(width, height, false);
         shape.draw = function () {
             rect(0, 0, width, height);
         };
         return shape;
-    };
-    buildingShape.canBeRotated = function () {
-        return false;
     };
     buildingShape.getComplexity = function () {
         return 4;
@@ -61,15 +58,17 @@ function BuildingShapeFactory() {
      */
     buildingShape = new BuildingShape();
     buildingShape.createShape = function (width, height) {
-        var shape = new Shape();
+        var shape = new Shape(width, height);
+        shape.random1 = random(0.1, 0.7);
+        shape.random2 = random(0.3, 0.9);
         shape.draw = function () {
             beginShape();
             vertex(0, 0);
             vertex(width, 0);
             vertex(width, height);
-            var notchWidth = width * random(0.1, 0.7);
+            var notchWidth = width * this.random1;
             vertex(notchWidth, height);
-            var notchHeight = height * random(0.3, 0.9);
+            var notchHeight = height * this.random2;
             vertex(notchWidth, notchHeight);
             vertex(0, notchHeight);
             endShape(CLOSE);
@@ -89,12 +88,13 @@ function BuildingShapeFactory() {
      */
     buildingShape = new BuildingShape();
     buildingShape.createShape = function (width, height) {
-        var shape = new Shape();
+        var shape = new Shape(width, height);
+        shape.random1 = random(0.5, 0.9);
         shape.draw = function () {
             beginShape();
             vertex(0, 0);
             vertex(width, 0);
-            var mainWidth = width * random(0.5, 0.9);
+            var mainWidth = width * this.random1;
             vertex(mainWidth, height);
             vertex(0, height);
             endShape(CLOSE);
@@ -114,13 +114,15 @@ function BuildingShapeFactory() {
      */
     buildingShape = new BuildingShape();
     buildingShape.createShape = function (width, height) {
-        var shape = new Shape();
+        var shape = new Shape(width, height);
+        shape.random1 = random(0.5, 0.9);
+        shape.random2 = random(0.5, 0.8);
         shape.draw = function () {
             beginShape();
             vertex(0, 0);
             vertex(width, 0);
-            var mainWidth = width * random(0.5, 0.9);
-            var mainHeight = height * random(0.5, 0.8);
+            var mainWidth = width * this.random1;
+            var mainHeight = height * this.random2;
             vertex(mainWidth, height - mainHeight);
             vertex(mainWidth, height);
             vertex(0, height);
@@ -141,17 +143,20 @@ function BuildingShapeFactory() {
      */
     buildingShape = new BuildingShape();
     buildingShape.createShape = function (width, height) {
-        var shape = new Shape();
+        var shape = new Shape(width, height);
+        shape.random1 = random(0.5, 0.9);
+        shape.random2 = random(0.2, 0.3);
+        shape.random3 = random(0.2, 0.5);
         shape.draw = function () {
             beginShape();
             vertex(0, 0);
-            var mainWidth = width * random(0.5, 0.9);
+            var mainWidth = width * this.random1;
             vertex(mainWidth, 0);
 
-            var peakOffset = height * random(0.2, 0.3);
+            var peakOffset = height * this.random2;
             vertex(mainWidth, peakOffset);
 
-            var peakHeight = height * random(0.2, 0.5);
+            var peakHeight = height * this.random3;
             vertex(width, peakOffset + peakHeight / 2);
             vertex(mainWidth, peakOffset + peakHeight);
 
@@ -171,10 +176,12 @@ function BuildingShapeFactory() {
      */
     buildingShape = new BuildingShape();
     buildingShape.createShape = function (width, height) {
-        var shape = new Shape();
+        var shape = new Shape(width, height);
+        shape.random1 = random(0.3, 0.7);
+        shape.random2 = random(0.1, 0.3);
         shape.draw = function () {
-            var firstHeight = height * random(0.3, 0.7);
-            var distance = height * random(0.1, 0.3);
+            var firstHeight = height * this.random1;
+            var distance = height * this.random2;
             rect(0, 0, width, firstHeight - distance);
             rect(0, firstHeight, width, height - firstHeight);
         };
@@ -187,7 +194,7 @@ function BuildingShapeFactory() {
 
 
     this.knownShapes.forEach(function (shape) {
-        BuildingShapeFactory.totalSum += shape.getProbability();
+        this.totalSum += shape.getProbability();
         if (shape.getComplexity() < this.minComplexity) {
             this.minComplexity = shape.getComplexity();
         }
@@ -205,7 +212,7 @@ function BuildingShapeFactory() {
 var BuildingShapeFactory_INSTANCE = null;
 
 BuildingShapeFactory.getRandomBuildingShape = function () {
-    if (BuildingShapeFactory_INSTANCE == null){
+    if (BuildingShapeFactory_INSTANCE == null) {
         BuildingShapeFactory_INSTANCE = new BuildingShapeFactory();
     }
     return BuildingShapeFactory_INSTANCE.getRandomBuildingShapeInternal();

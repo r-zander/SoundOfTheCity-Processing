@@ -37,6 +37,5 @@ Building.prototype.draw = function (strokeColor, backgroundColor) {
     fill(backgroundColor);
     stroke(strokeColor);
     strokeWeight(1);
-    // shape(this.shape, this.x, this.y);
-    this.shape.drawAtPosition(this.x, this.y);
+    shape(this.shape, this.x, this.y);
 };
