@@ -92,7 +92,7 @@ Instrument.setup = function () {
         for (var i = 0; i <= soundArraySize; i++) {
             instrument.sounds[i] = {
                 forwardSound: loadSound(CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ".A.wav"),
-                backwardSound: loadSound(CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ".B.wav"),
+                backwardSound: loadSound(CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ".B.wav")
             }
         }
 
