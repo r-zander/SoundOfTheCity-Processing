@@ -30,15 +30,33 @@ var Sounds = {
 
         lastTicks: [],
 
+
+        /*An important point to note is that on iOS, Apple currently mutes all sound output 
+        until the first time a sound is played during a user interaction event - for example, 
+        calling playSound() inside a touch event handler. 
+        You may struggle with Web Audio on iOS "not working" unless you circumvent this - 
+        in order to avoid problems like this, just play a sound 
+        (it can even be muted by connecting to a Gain Node with zero gain) inside an early UI 
+        event - e.g. "touch here to play".*/
+
         setup: function () {
 
-            this.onRestart();
+            //this.onRestart();
+            //var audioCtx;
+
+            //try{
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                this.audioCtx = new AudioContext();
+            //}
+            //catch(e){
+                //alert("Web Audio API is not supported in this browser");
+            //}
 
             this.CLOCK_FREQUENCY = (Config.beatsPerMinute / 60) * (Config.ticksPerBar / 4);
 
             this.INSTRUMENT_GRID = new CenteredInstrumentGrid();
 
-            this.clock = new WAAClock(new AudioContext());
+            this.clock = new WAAClock(this.audioCtx);
             this.clock.start();
 
             // this.part = new p5.Part(0, 1 / Config.ticksPerBar);
@@ -132,9 +150,12 @@ var Sounds = {
                 if (velocity > 0) {
                     // TODO get TIME and VELOCITY
                     var time = 0;
+
+                    street.sound.start(0);
+
                     // var velocity = 2;
                     // street.sound.play(time, 1, Sounds.getVolume(velocity));
-                    street.sound.play(time, 1, Sounds.getVolume(velocity));
+                    // street.sound.play(time, 1, Sounds.getVolume(velocity));
 
                     street.onNote();
 

@@ -54,8 +54,6 @@ function setup() {
 
     background(Colors.BACKGROUND);
 
-    Sounds.setup();
-
     // new TimedEventGenerator(
     //     this,
     //     "onTick",
