@@ -91,13 +91,30 @@ Instrument.setup = function () {
 
         for (var i = 0; i <= soundArraySize; i++) {
             instrument.sounds[i] = {
-                forwardSound: loadSound(CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ".A.wav"),
-                backwardSound: loadSound(CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ".B.wav")
-            }
+            forwardSound : Sounds.audioCtx.createBufferSource(),
+            backwardSound : Sounds.audioCtx.createBufferSource(),
+            };
+            for(var a = 0; a < 2; a++) {
+                var request = new XMLHttpRequest();
+                request.open('GET', CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ((a == 0) ? ".A.wav" : ".B.wav"), true);
+                console.log(CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ((a == 0) ? ".A.wav" : ".B.wav"));
+                request.responseType = 'arraybuffer';
+                request.onload = function() {
+                    Sounds.audioCtx.decodeAudioData(request.response, function(buffer) {
+                        console.log(buffer);
+                        //if(a == 0) instrument.sounds[i].forwardSound.buffer = buffer;
+                        //else instrument.sounds[i].backwardSound.buffer = buffer;
+                    }, function(e){"Error with decoding audio data" + e.err});
+                }
+                request.send();
+            }   
+            /*instrument.sounds[i] = {
+                //forwardSound: loadSound(CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ".A.wav"),
+                //backwardSound: loadSound(CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ".B.wav"),
+            }*/
         }
-
         instrument.sounds = new RandomListSet(instrument.sounds);
-
+        console.log(instrument.sounds);
         instrument.chooseRandomSounds = function () {
             return this.sounds.pickOne();
         }
