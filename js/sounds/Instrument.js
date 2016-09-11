@@ -95,7 +95,7 @@ Instrument.setup = function () {
                 backwardSound: Sounds.audioCtx.createBufferSource()
             };
             for (var a = 0; a < 2; a++) {
-                loadInstrumentSound(instrument, CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ((a == 0) ? ".A.wav" : ".B.wav"));
+                loadInstrumentSound(instrument, i, a);
             }
             /*instrument.sounds[i] = {
              //forwardSound: loadSound(CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ".A.wav"),
@@ -110,7 +110,9 @@ Instrument.setup = function () {
     });
 };
 
-function loadInstrumentSound(instrument, path) {
+function loadInstrumentSound(instrument, i, a) {
+    var path = CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ((a == 0) ? ".A.wav" : ".B.wav");
+
     var request = new XMLHttpRequest();
     request.open('GET', path, true);
     console.log(path);
@@ -118,8 +120,12 @@ function loadInstrumentSound(instrument, path) {
     request.onload = function () {
         Sounds.audioCtx.decodeAudioData(request.response, function (buffer) {
             console.log(buffer);
-            //if(a == 0) instrument.sounds[i].forwardSound.buffer = buffer;
-            //else instrument.sounds[i].backwardSound.buffer = buffer;
+            if (a == 0) {
+                instrument.sounds[i].forwardSound.buffer = buffer;
+            }
+            else {
+                instrument.sounds[i].backwardSound.buffer = buffer;
+            }
         }, function (e) {
             throw "Error with decoding audio data" + e.err
         });
