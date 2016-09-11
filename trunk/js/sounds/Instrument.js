@@ -121,10 +121,10 @@ function loadInstrumentSound(instrument, i, a) {
         Sounds.audioCtx.decodeAudioData(request.response, function (buffer) {
             console.log(buffer);
             if (a == 0) {
-                instrument.sounds[i].forwardSound.buffer = buffer;
+                instrument.sounds.elements[i].forwardSound.buffer = buffer;
             }
             else {
-                instrument.sounds[i].backwardSound.buffer = buffer;
+                instrument.sounds.elements[i].backwardSound.buffer = buffer;
             }
         }, function (e) {
             throw "Error with decoding audio data" + e.err
