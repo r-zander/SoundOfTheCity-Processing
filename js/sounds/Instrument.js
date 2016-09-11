@@ -79,7 +79,7 @@ Instrument.setup = function () {
         colorMode(HSB);
 
         instrument.backgroundColor = color(
-            hue (instrument.color),
+            hue(instrument.color),
             saturation(instrument.color) / 2,
             brightness(instrument.color) / 2);
 
@@ -91,27 +91,16 @@ Instrument.setup = function () {
 
         for (var i = 0; i <= soundArraySize; i++) {
             instrument.sounds[i] = {
-            forwardSound : Sounds.audioCtx.createBufferSource(),
-            backwardSound : Sounds.audioCtx.createBufferSource(),
+                forwardSound: Sounds.audioCtx.createBufferSource(),
+                backwardSound: Sounds.audioCtx.createBufferSource()
             };
-            for(var a = 0; a < 2; a++) {
-                var request = new XMLHttpRequest();
-                request.open('GET', CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ((a == 0) ? ".A.wav" : ".B.wav"), true);
-                console.log(CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ((a == 0) ? ".A.wav" : ".B.wav"));
-                request.responseType = 'arraybuffer';
-                request.onload = function() {
-                    Sounds.audioCtx.decodeAudioData(request.response, function(buffer) {
-                        console.log(buffer);
-                        //if(a == 0) instrument.sounds[i].forwardSound.buffer = buffer;
-                        //else instrument.sounds[i].backwardSound.buffer = buffer;
-                    }, function(e){"Error with decoding audio data" + e.err});
-                }
-                request.send();
-            }   
+            for (var a = 0; a < 2; a++) {
+                loadInstrumentSound(instrument, CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ((a == 0) ? ".A.wav" : ".B.wav"));
+            }
             /*instrument.sounds[i] = {
-                //forwardSound: loadSound(CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ".A.wav"),
-                //backwardSound: loadSound(CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ".B.wav"),
-            }*/
+             //forwardSound: loadSound(CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ".A.wav"),
+             //backwardSound: loadSound(CONFIG_PATH + instrument.configKey + "/" + (i + 1) + ".B.wav"),
+             }*/
         }
         instrument.sounds = new RandomListSet(instrument.sounds);
         console.log(instrument.sounds);
@@ -121,5 +110,21 @@ Instrument.setup = function () {
     });
 };
 
+function loadInstrumentSound(instrument, path) {
+    var request = new XMLHttpRequest();
+    request.open('GET', path, true);
+    console.log(path);
+    request.responseType = 'arraybuffer';
+    request.onload = function () {
+        Sounds.audioCtx.decodeAudioData(request.response, function (buffer) {
+            console.log(buffer);
+            //if(a == 0) instrument.sounds[i].forwardSound.buffer = buffer;
+            //else instrument.sounds[i].backwardSound.buffer = buffer;
+        }, function (e) {
+            throw "Error with decoding audio data" + e.err
+        });
+    };
+    request.send();
+}
 
 
