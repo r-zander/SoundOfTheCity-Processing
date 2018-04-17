@@ -71,10 +71,10 @@ function Pattern(line) {
     this.tickDivider = parseInt(values[0]);
 
     this.mainPattern = values[1];
-    this.forwardSequence = this.applyTickDivider(this.readSequence(this.mainPattern));
+    this.primarySequence = this.applyTickDivider(this.readSequence(this.mainPattern));
 
     this.complementaryPattern = values[2];
-    this.backwardSequence = this.applyTickDivider(this.readSequence(this.complementaryPattern));
+    this.secondarySequence = this.applyTickDivider(this.readSequence(this.complementaryPattern));
 }
 
 Pattern.prototype.applyTickDivider = function (sequence) {
@@ -110,12 +110,12 @@ Pattern.prototype.readSequence = function (string) {
     return sequence;
 };
 
-// Pattern.prototype.getVelocity = function (steps, forward) {
+// Pattern.prototype.getVelocity = function (steps, primary) {
 //     var sequence;
-//     if (forward) {
-//         sequence = this.forwardSequence;
+//     if (primary) {
+//         sequence = this.primarySequence;
 //     } else {
-//         sequence = this.backwardSequence;
+//         sequence = this.secondarySequence;
 //     }
 //
 //     var index = steps % sequence.length;
@@ -123,11 +123,11 @@ Pattern.prototype.readSequence = function (string) {
 // };
 //
 // Pattern.prototype.mainPattern = function () {
-//     return this.sequenceToString(this.forwardSequence);
+//     return this.sequenceToString(this.primarySequence);
 // };
 //
 // Pattern.prototype.complementaryPattern = function () {
-//     return this.sequenceToString(this.backwardSequence);
+//     return this.sequenceToString(this.secondarySequence);
 // };
 //
 // Pattern.prototype.sequenceToString = function (sequence) {

@@ -72,6 +72,10 @@ var Sounds = {
             //     }
             //     t0 = t1;
             // }, [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+
+            Break.setup();
+            Patterns.setup();
+            Instrument.setup();
         },
 
         averageTickDuration: function () {
@@ -128,12 +132,14 @@ var Sounds = {
             // var part = this.getPart(street.pattern.tickDivider);
 
             var sequence;
-            if (street.forward) {
-                street.sound = street.block.sounds.forwardSound;
-                sequence = street.pattern.forwardSequence;
+            if (street.primary) {
+                street.sound = Sounds.audioCtx.createBufferSource();
+                street.sound.buffer = street.block.sounds.primary;
+                sequence = street.pattern.primarySequence;
             } else {
-                street.sound = street.block.sounds.backwardSound;
-                sequence = street.pattern.backwardSequence;
+                street.sound = Sounds.audioCtx.createBufferSource();
+                street.sound.buffer = street.block.sounds.secondary;
+                sequence = street.pattern.secondarySequence;
             }
 
             street.step = 0;

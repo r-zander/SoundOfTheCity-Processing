@@ -1,5 +1,5 @@
 "use strict";
-function BPathFollowing(path, forward, maxVelocity) {
+function BPathFollowing(path, primary, maxVelocity) {
 
     this.maxVelocity = maxVelocity;
 
@@ -7,9 +7,9 @@ function BPathFollowing(path, forward, maxVelocity) {
 
     this.path = path;
 
-    this.forward = forward;
+    this.primary = primary;
 
-    if (forward) {
+    if (primary) {
         this.currentNodeIndex = 0;
     } else {
         this.currentNodeIndex = path.length() - 1;
@@ -46,18 +46,18 @@ BPathFollowing.prototype.pathFollowing = function(particle) {
 
         if (particle.position.dist(target) <= this.path.radius) {
             var car = particleCars[particle.id];
-            this.currentNodeIndex += this.forward ? 1 : -1;
+            this.currentNodeIndex += this.primary ? 1 : -1;
 
             if (this.currentNodeIndex >= this.path.length() || this.currentNodeIndex < 0) {
                 switch (Config.carBehavior) {
                     case CarBehavior.BACK_AND_FORTH:
-                        this.forward = !this.forward;
-                        this.currentNodeIndex += this.forward ? 1 : -1;
+                        this.primary = !this.primary;
+                        this.currentNodeIndex += this.primary ? 1 : -1;
                         this.path.disableCarSpawn();
                         break;
                     case CarBehavior.RECYCLE:
                         var respawnCell;
-                        if (this.forward) {
+                        if (this.primary) {
                             respawnCell = this.path.debugPath.get(DebugTitle.START).cell;
                             this.currentNodeIndex = 0;
                         } else {

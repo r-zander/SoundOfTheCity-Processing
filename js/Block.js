@@ -7,9 +7,9 @@ function Block() {
 
     this.centerCell = null;
 
-    this.forwardStreet = null;
+    this.primaryStreet = null;
 
-    this.backwardStreet = null;
+    this.secondaryStreet = null;
 
     this.numberOfStreets = 0;
 
@@ -70,12 +70,12 @@ Block.prototype.getPattern = function () {
 Block.prototype.destroy = function () {
     grid.blocks.remove(this);
 
-    if (this.forwardStreet != null) {
-        this.forwardStreet.destroy();
+    if (this.primaryStreet != null) {
+        this.primaryStreet.destroy();
     }
 
-    if (this.backwardStreet != null) {
-        this.backwardStreet.destroy();
+    if (this.secondaryStreet != null) {
+        this.secondaryStreet.destroy();
     }
 
     this.cells.forEach(function (cell) {
@@ -169,11 +169,11 @@ Block.prototype.finish = function () {
          * Only create streets were actually a path could have been found.
          */
         if (streetNodes.length > 0) {
-            this.forwardStreet = new Street({
+            this.primaryStreet = new Street({
                 block: this,
                 nodes: streetNodes,
                 debugPath: debugPath,
-                forward: true,
+                primary: true,
                 pattern: this.pattern,
                 instrument: this.instrument
             });
@@ -194,11 +194,11 @@ Block.prototype.finish = function () {
          * Only create streets were actually a path could have been found.
          */
         if (streetNodes.length > 0) {
-            this.backwardStreet = new Street({
+            this.secondaryStreet = new Street({
                 block: this,
                 nodes: streetNodes,
                 debugPath: debugPath,
-                forward: false,
+                primary: false,
                 pattern: this.pattern,
                 instrument: this.instrument
             });
@@ -322,11 +322,11 @@ Block.prototype.getCell = function (side) {
 };
 
 Block.prototype.draw = function () {
-    if (this.forwardStreet != null) {
-        this.forwardStreet.draw();
+    if (this.primaryStreet != null) {
+        this.primaryStreet.draw();
     }
-    if (this.backwardStreet != null) {
-        this.backwardStreet.draw();
+    if (this.secondaryStreet != null) {
+        this.secondaryStreet.draw();
     }
     if (this.strokeColorAnimation != null) {
         this.strokeColorAnimation.step();
@@ -337,25 +337,25 @@ Block.prototype.draw = function () {
 };
 
 Block.prototype.onAfterDraw = function () {
-    if (this.forwardStreet != null) {
-        this.forwardStreet.drawStations();
+    if (this.primaryStreet != null) {
+        this.primaryStreet.drawStations();
     }
-    if (this.backwardStreet != null) {
-        this.backwardStreet.drawStations();
+    if (this.secondaryStreet != null) {
+        this.secondaryStreet.drawStations();
     }
 };
 
 // Block.prototype.onTick = function (currentTick) {
 //     var velocity;
 //     if (this.tickEnabled) {
-//         if (this.forwardStreet != null) {
-//             velocity = this.forwardStreet.tickCarSpawn(currentTick);
+//         if (this.primaryStreet != null) {
+//             velocity = this.primaryStreet.tickCarSpawn(currentTick);
 //             if (velocity > 0) {
 //                 this.onCarSpawn(velocity, true);
 //             }
 //         }
-//         if (this.backwardStreet != null) {
-//             velocity = this.backwardStreet.tickCarSpawn(currentTick);
+//         if (this.secondaryStreet != null) {
+//             velocity = this.secondaryStreet.tickCarSpawn(currentTick);
 //             if (velocity > 0) {
 //                 this.onCarSpawn(velocity, false);
 //             }

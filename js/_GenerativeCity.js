@@ -1,4 +1,5 @@
 "use strict";
+
 var Colors = {
     BACKGROUND: '#000000'
 };
@@ -41,9 +42,6 @@ function setup() {
     // TODO implement FULLSCREEN mode
 
     Sounds.setup();
-    Break.setup();
-    Patterns.setup();
-    Instrument.setup();
 
     Car.setup();
     GridCell.setup();
@@ -193,19 +191,19 @@ function drawBlockInfo() {
         text("Tick Divider: " + block.getPattern().tickDivider, x, y);
         y += lineHeight;
 
-        if (block.forwardStreet !== null) {
-            text("Forward Street: " + block.forwardStreet.id, x, y);
+        if (block.primaryStreet !== null) {
+            text("primary Street: " + block.primaryStreet.id, x, y);
             y += lineHeight;
-            text("    Sound: " + block.sounds.forwardSound.file, x, y);
+            text("    Sound: " + block.sounds.primary.file, x, y);
             y += lineHeight;
             text("    Pattern: " + block.getPattern().mainPattern, x, y);
             y += lineHeight;
         }
 
-        if (block.backwardStreet !== null) {
-            text("Backward Street: " + block.backwardStreet.id, x, y);
+        if (block.secondaryStreet !== null) {
+            text("secondary Street: " + block.secondaryStreet.id, x, y);
             y += lineHeight;
-            text("    Sound: " + block.sounds.backwardSound.file, x, y);
+            text("    Sound: " + block.sounds.secondary.file, x, y);
             y += lineHeight;
             text("    Pattern: " + block.getPattern().complementaryPattern, x, y);
         }
