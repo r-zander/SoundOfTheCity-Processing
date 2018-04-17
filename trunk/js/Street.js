@@ -32,13 +32,13 @@ function Street(parameters) {
             break;
     }
 
-    this.forward = parameters.forward;
+    this.primary = parameters.primary;
 
     this.radius = GridCell.DIAMETER;
 
     var spawnCell;
 
-    if (this.forward) {
+    if (this.primary) {
         spawnCell = this.debugPath.get(DebugTitle.BLOCK_START).cell;
     } else {
         spawnCell = this.debugPath.get(DebugTitle.BLOCK_END).cell;
@@ -117,9 +117,9 @@ Street.prototype.length = function () {
 //
 //     var returnVelocity = 0;
 //     if (this.spawnCars > 0 && this.steps % pattern.tickDivider == 0) {
-//         var velocity = pattern.getVelocity(this.patternSequenceIndex, this.forward);
+//         var velocity = pattern.getVelocity(this.patternSequenceIndex, this.primary);
 //         if (velocity > 0) {
-//             this.spawnCar(this.spawnPoint, this.forward);
+//             this.spawnCar(this.spawnPoint, this.primary);
 //             returnVelocity = velocity;
 //         }
 //
@@ -131,13 +131,13 @@ Street.prototype.length = function () {
 // };
 
 Street.prototype.onNote = function () {
-    this.spawnCar(this.spawnPoint, this.forward);
+    this.spawnCar(this.spawnPoint, this.primary);
     this.block.onCarSpawn();
 };
 
-Street.prototype.spawnCar = function (location, forward) {
+Street.prototype.spawnCar = function (location, primary) {
     var car = new Car(location.x, location.y);
-    car.pathFollowing = new BPathFollowing(this, forward, this.carSpeed);
+    car.pathFollowing = new BPathFollowing(this, primary, this.carSpeed);
     cars.push(car);
     particleCars[car.particle.id] = car;
 };
@@ -154,13 +154,13 @@ Street.prototype.draw = function () {
         });
 
         // noStroke();
-        // if (this.forward) {
+        // if (this.primary) {
         //     fill(255, 0, 0);
         // } else {
         //     fill(0, 196, 0);
         // }
         // this.cells.forEach(function (cell) {
-        //     if (this.forward) {
+        //     if (this.primary) {
         //         triangle(
         //             cell.xf() + GridCell.DIAMETER, cell.yf(),
         //             cell.xf() + GridCell.DIAMETER, cell.yf() + GridCell.DIAMETER,
