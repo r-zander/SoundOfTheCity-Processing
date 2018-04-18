@@ -46,6 +46,8 @@ function Street(parameters) {
     this.spawnPoint = createVector(spawnCell.xf(), spawnCell.yf());
 
     Sounds.onStreetCreation(this);
+
+    streets.push(this);
 }
 
 Street.prototype.nodesToCells = function (nodes) {
@@ -197,6 +199,8 @@ Street.prototype.destroy = function () {
     });
 
     Sounds.onStreetRemoval(this);
+
+    streets.slice( streets.indexOf(this), 1);
 };
 
 var DebugTitle = {

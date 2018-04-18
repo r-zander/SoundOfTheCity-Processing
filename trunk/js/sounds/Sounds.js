@@ -52,6 +52,9 @@ var Sounds = {
                 //alert("Web Audio API is not supported in this browser");
             //}
 
+            this.masterGain = this.audioCtx.createGain();
+            this.masterGain.connect(this.audioCtx.destination);
+
             this.CLOCK_FREQUENCY = (Config.beatsPerMinute / 60) * (Config.ticksPerBar / 4);
 
             this.INSTRUMENT_GRID = new CenteredInstrumentGrid();
@@ -133,12 +136,10 @@ var Sounds = {
 
             var sequence;
             if (street.primary) {
-                street.sound = Sounds.audioCtx.createBufferSource();
-                street.sound.buffer = street.block.sounds.primary;
+                street.sound = street.block.sounds.primary;
                 sequence = street.pattern.primarySequence;
             } else {
-                street.sound = Sounds.audioCtx.createBufferSource();
-                street.sound.buffer = street.block.sounds.secondary;
+                street.sound = street.block.sounds.secondary;
                 sequence = street.pattern.secondarySequence;
             }
 
@@ -157,7 +158,10 @@ var Sounds = {
                     // TODO get TIME and VELOCITY
                     var time = 0;
 
-                    street.sound.start(0);
+                    var bufferSource  = Sounds.audioCtx.createBufferSource();
+                    bufferSource.buffer = street.sound;
+                    bufferSource.connect(Sounds.masterGain);
+                    bufferSource.start(0);
 
                     // var velocity = 2;
                     // street.sound.play(time, 1, Sounds.getVolume(velocity));

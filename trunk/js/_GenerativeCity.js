@@ -8,6 +8,8 @@ var grid;
 
 var currentInteraction = null;
 
+var streets = [];
+
 var cars = [];
 
 var particleCars = {};
